@@ -1,6 +1,7 @@
 
+import java.io.Serializable;
 
-public class Carte {
+public class Carte implements Serializable{
 
   //Check if la carte est spéciale, On lui donnera : Couleur + chiffre si oui Spéciale si non
   private Boolean  Special;
@@ -27,6 +28,8 @@ public class Carte {
       //this.N = N;
     }
   }
+
+  public Carte (){}
 
   public Boolean getSpeciale (){
     return this.Special;

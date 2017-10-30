@@ -12,18 +12,33 @@ public class Serveur{
 	try {
 		sock_ecoute = new ServerSocket (port);
 		while (true) {
-		//flux entrant
+		//flux entrant (String)
 		sock_service = sock_ecoute.accept();
 		BufferedReader br =new BufferedReader(new
 				InputStreamReader( sock_service.getInputStream()));
 		String chaine = br.readLine();
 		System.out.println("Reçu : " + chaine);
 
+
+		//Objet entrant
+		ObjectInputStream inFromClient = new ObjectInputStream(
+		sock_service.getInputStream());
+
 		// flux sortant
-		PrintStream ps = new PrintStream (sock_service.getOutputStream());
+		PrintStream ps = new PrintStream (
+		sock_service.getOutputStream());
     //chaine va être envoyée
     chaine =  C.getPouvoir() ;
 		ps.println(chaine+" du serveur N " + args[0]);
+
+		//Objet sortant
+		ObjectOutputStream outToClient =
+		new ObjectOutputStream(sock_service.getOutputStream());
+
+
+
+		outToClient.writeObject(C);
+
 		sock_service.close();
 		}
 		}

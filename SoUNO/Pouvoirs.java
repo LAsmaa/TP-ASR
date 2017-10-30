@@ -1,10 +1,11 @@
+import java.io.Serializable;
 
-public enum Pouvoirs {
+public enum Pouvoirs implements Serializable{
   PLUS_DEUX("PLus deux"),
-  INVERSEMENT("Inversemment");
+  INVERSEMENT("Inversemment"),
   PASSE_TON_TOUR("Passe ton tour"),
   JORKER("Joker"),
-  PLUS_QUATRE;
+  PLUS_QUATRE("Plus quatre");
 
   private String value;
 
