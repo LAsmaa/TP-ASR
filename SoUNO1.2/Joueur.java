@@ -1,6 +1,8 @@
 import java.util.*;
+import java.io.Serializable;
 
-public class Joueur{
+
+public class Joueur implements Serializable {
 
   public String name;
   private ArrayList<Carte> main_joueur;
