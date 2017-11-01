@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Jeu_De_Cartes {
-  public ArrayList <Carte> Jeu;
+  public ArrayList<Carte> Jeu;
 
   public Jeu_De_Cartes (){
     Jeu = new ArrayList <Carte> (){{
@@ -44,6 +44,14 @@ public class Jeu_De_Cartes {
 
   public void addCarte (Carte carte){
     this.Jeu.add(carte);
-
   }
+
+  public Carte removeCarte(){
+    int random = (int) ((Math.random() * Jeu.size()));
+    Carte removed_carte = Jeu.get(random);
+    Jeu.remove(random);
+    return removed_carte;
+  }
+
+
 }
