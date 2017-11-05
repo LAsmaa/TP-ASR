@@ -28,6 +28,10 @@ public class Partie{
     return main_joueur;
   }
 
+  public Carte donner_carte(){
+    return jeu_de_partie.removeCarte();
+  }
+
   public void addJoueur(Joueur joueur){
     this.joueurs_de_partie.add(joueur);
   }

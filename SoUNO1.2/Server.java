@@ -2,6 +2,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.*;
+
 
 public class Server {
 
@@ -67,8 +69,10 @@ public class Server {
   }*/
 
   public void envoyer_carte(Carte carte, ServerSocket serverSocket, Socket socket){
+    isConnected = false;
     while (!isConnected) {
       try {
+        outputStream = null;
         System.out.println("Connected");
         isConnected = true;
         outputStream = new ObjectOutputStream(socket.getOutputStream());
@@ -83,11 +87,16 @@ public class Server {
     }
   }
 
-  public void envoyer_main_joueur(ServerSocket serverSocket, Socket socket, ArrayList<Carte> main_a_envoyer){
-    for (Carte temp : main_a_envoyer){
-      this.envoyer_carte(temp, serverSocket, socket);
+  public void envoyer_main_joueur(ServerSocket serverSocket, Socket socket, Partie partie){
+    for(int i = 0 ; i < 8 ; i ++){
+      System.out.println("Envoie de carte n°" + i);
+      this.envoyer_carte(partie.donner_carte(), serverSocket, socket);
     }
+  }
 
+  public void envoyer_carte_table(ServerSocket serverSocket, Socket socket, Partie partie){
+    System.out.println("Envoie de la carte de la table");
+    this.envoyer_carte(partie.getCarteSurTable(), serverSocket, socket);
   }
 
   public static void main(String[] args) {
@@ -103,7 +112,9 @@ public class Server {
         System.out.println("Connected");
         Partie partie = new Partie();
         partie.addJoueur(server.recevoirJoueur(serverSocket, socket));
-        partie.envoyer_main_joueur(serverSocket, socket, partie.donner_main_joueur());
+        ArrayList<Carte> main_a_envoyer = partie.donner_main_joueur();
+        server.envoyer_main_joueur(serverSocket, socket, partie);
+        server.envoyer_carte_table(serverSocket, socket, partie);
         socket.close();
       }
     }catch (IOException e){

@@ -6,12 +6,14 @@ public class Joueur implements Serializable {
 
   public String name;
   private ArrayList<Carte> main_joueur;
+  private Carte carte_sur_table;
   private boolean joue;
   private boolean gagne;
 
   public Joueur(String name){
     this.name=name;
     this.main_joueur = new ArrayList<Carte>();
+    this.carte_sur_table = null;
     this.joue= false;
     this.gagne= false;
   }
@@ -22,6 +24,10 @@ public class Joueur implements Serializable {
 
   public String getName(){
     return this.name;
+  }
+
+  public void setCarteSurTable(Carte carte_sur_table){
+    this.carte_sur_table=carte_sur_table;
   }
 
   public void setJoue(boolean joue){

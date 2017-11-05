@@ -41,8 +41,8 @@ public class Carte implements Serializable {
 
   public String toString(){
     if (pouvoir != null){
-      return "Carte : "+ getPouvoir() + "de couleur " + getCouleur();
-    }else return "Carte numero : "+ getNumero() + "de couleur " + getCouleur();
+      return "Carte: "+ getPouvoir() + " de couleur " + getCouleur();
+    }else return "Carte numero: "+ getNumero() + " de couleur " + getCouleur();
 
   }
 
