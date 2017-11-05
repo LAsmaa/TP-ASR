@@ -40,9 +40,15 @@ public class Joueur implements Serializable {
     this.main_joueur.add(carte);
   }
 
-  public ArrayList<Carte> get_main_joueur(){
+  public ArrayList<Carte> getMainJoueur(){
     return this.main_joueur;
   }
+
+  public void setMainJoueur (ArrayList<Carte> main_joueur){
+    this.main_joueur = main_joueur;
+  }
+
+
 
 
 
@@ -85,8 +91,8 @@ public class Joueur implements Serializable {
     Scanner sc = new Scanner(System.in);
     int choix;
     do{
+      int i = 0;
       for (Carte temp: main_joueur){
-        int i = 0;
         System.out.println("- " + i + " " + temp + "\n");
         i++;
       }
@@ -107,7 +113,7 @@ public class Joueur implements Serializable {
     Carte carte_deposee ;
     int choix_j = this.choix_jeux();
     if (choix_j==1)/*deposer carte*/{
-      ArrayList<Carte> main_a_jouer = this.get_main_joueur();
+      ArrayList<Carte> main_a_jouer = this.getMainJoueur();
       carte_deposee  = this.choix_carte(carte_table);
     }else{
       carte_deposee = null;

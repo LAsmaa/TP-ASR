@@ -20,6 +20,14 @@ public class Partie{
       return this.joueurs_de_partie;
   }
 
+  public ArrayList<Carte> donner_main_joueur(){
+    ArrayList<Carte> main_joueur = new ArrayList<Carte>();
+    for(int i = 0 ; i < 8 ; i ++){
+      main_joueur.add(jeu_de_partie.removeCarte());
+    }
+    return main_joueur;
+  }
+
   public void addJoueur(Joueur joueur){
     this.joueurs_de_partie.add(joueur);
   }
