@@ -15,26 +15,6 @@ public class Server {
 
   public Server(){}
 
-  /*public void communicate(){
-    try {
-      serverSocket = new ServerSocket(4445);
-      while (true) {
-        socket = serverSocket.accept();
-        System.out.println("Connected");
-        inStream = new ObjectInputStream(socket.getInputStream());
-        Joueur joueur_client = (Joueur) inStream.readObject();
-        System.out.println("Joueur reçu : " + joueur_client.getName() );
-        socket.close();
-      }
-    } catch (SocketException se) {
-        System.exit(0);
-    } catch (IOException e) {
-        e.printStackTrace();
-    } catch (ClassNotFoundException cn) {
-        cn.printStackTrace();
-    }
-
-  }*/
 
   public Joueur recevoirJoueur(ServerSocket serverSocket, Socket socket){
     try {
@@ -52,31 +32,28 @@ public class Server {
     } return null;
   }
 
-  /*public void recevoir_Carte(Carte main_joueur ){
+  public Carte recevoir_Carte(Socket socket){
     try {
-      System.out.println("Connected recevoir carte ");
       inStream = new ObjectInputStream(socket.getInputStream());
       Carte carte_recue = (Carte) inStream.readObject();
-      main_joueur.add(carte_recue);
-      socket.close();
+      return carte_recue;
     } catch (SocketException se) {
         System.exit(0);
     } catch (IOException e) {
         e.printStackTrace();
     } catch (ClassNotFoundException cn) {
         cn.printStackTrace();
-    }
-  }*/
+    }return null;
+  }
 
   public void envoyer_carte(Carte carte, ServerSocket serverSocket, Socket socket){
     isConnected = false;
     while (!isConnected) {
       try {
         outputStream = null;
-        System.out.println("Connected");
         isConnected = true;
         outputStream = new ObjectOutputStream(socket.getOutputStream());
-        System.out.println("Object to be written = " + carte );
+        System.out.println("Envoie de la carte: " + carte );
         outputStream.writeObject(carte);
       } catch (SocketException se) {
         se.printStackTrace();
@@ -114,7 +91,12 @@ public class Server {
         partie.addJoueur(server.recevoirJoueur(serverSocket, socket));
         ArrayList<Carte> main_a_envoyer = partie.donner_main_joueur();
         server.envoyer_main_joueur(serverSocket, socket, partie);
+        do{
+
+        }while(partie.getEnCour());
         server.envoyer_carte_table(serverSocket, socket, partie);
+        Carte recue = server.recevoir_Carte(socket);
+        System.out.println(recue);
         socket.close();
       }
     }catch (IOException e){

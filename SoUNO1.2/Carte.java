@@ -5,7 +5,7 @@ public class Carte implements Serializable {
   public String couleur;
   public int numero;
 
-  public Carte(String pouvoir, String couleur){
+  /*public Carte(String pouvoir, String couleur){
     this.pouvoir = pouvoir;
     this.couleur = couleur;
   }
@@ -13,6 +13,12 @@ public class Carte implements Serializable {
   public Carte(int numero, String couleur){
     this.numero = numero;
     this.couleur = couleur;
+  }*/
+
+  public Carte(int numero, String couleur, String pouvoir){
+    this.numero = numero;
+    this.couleur = couleur;
+    this.pouvoir = pouvoir;
   }
 
   public String getPouvoir(){
@@ -41,8 +47,8 @@ public class Carte implements Serializable {
 
   public String toString(){
     if (pouvoir != null){
-      return "Carte: "+ getPouvoir() + " de couleur " + getCouleur();
-    }else return "Carte numero: "+ getNumero() + " de couleur " + getCouleur();
+      return "Carte: "+ this.getPouvoir() + " de couleur " + this.getCouleur();
+    }else return "Carte : "+ this.getNumero() + " de couleur " + this.getCouleur();
 
   }
 

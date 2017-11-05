@@ -40,6 +40,10 @@ public class Partie{
     return this.carte_sur_table;
   }
 
+  public boolean getEnCour(){
+    return this.partie_en_cour;
+  }
+
   public void setCarteSurTable(Carte carte){
     this.carte_sur_table = carte;
   }

@@ -41,7 +41,6 @@ public class Client {
           System.out.println("Connected");
           isConnected = true;
           outputStream = new ObjectOutputStream(socket.getOutputStream());
-          System.out.println("Object to be written = " + joueur.getName());
           outputStream.writeObject(joueur);
         } catch (SocketException se) {
           se.printStackTrace();
@@ -54,10 +53,8 @@ public class Client {
 
   public Carte recevoir_Carte(Socket socket){
     try {
-      System.out.println("Connected recevoir carte ");
       inStream = new ObjectInputStream(socket.getInputStream());
       Carte carte_recue = (Carte) inStream.readObject();
-      System.out.println("Care reçue : " + carte_recue);
       return carte_recue;
     } catch (SocketException se) {
         System.exit(0);
@@ -68,10 +65,30 @@ public class Client {
     }return null;
   }
 
+  public void envoyer_carte(Carte carte, Socket socket){
+    isConnected = false;
+    while (!isConnected) {
+      try {
+        outputStream = null;
+        isConnected = true;
+        outputStream = new ObjectOutputStream(socket.getOutputStream());
+        System.out.println("Envoie de la carte: " + carte );
+        outputStream.writeObject(carte);
+      } catch (SocketException se) {
+        se.printStackTrace();
+        // System.exit(0);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+
   public ArrayList<Carte> recevoir_Main_Joueur(Socket socket){
+    System.out.println("Reception de vos cartes ....\n");
     ArrayList<Carte> main_joueur = new ArrayList<Carte>();
     for (int i = 0; i < 8; i++){
-      recevoir_Carte(socket);
+      main_joueur.add(recevoir_Carte(socket));
     }
     return main_joueur;
   }
@@ -89,6 +106,13 @@ public class Client {
       client.envoyer_Joueur(socket, joueur_client);
       joueur_client.setMainJoueur(client.recevoir_Main_Joueur(socket));
       joueur_client.setCarteSurTable(client.recevoir_Carte(socket));
+      joueur_client.print_main_joueur();
+      System.out.println(" \n** Sur la table: " + joueur_client.getCarteSurTable());
+
+
+      Carte choisie = joueur_client.choix_carte();
+      System.out.println("Carte choisir: " + choisie );
+      client.envoyer_carte(choisie, socket);
 
       socket.close();
 
