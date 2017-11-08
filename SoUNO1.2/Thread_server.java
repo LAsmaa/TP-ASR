@@ -126,8 +126,8 @@ class Thread_Server extends Thread{
       joueur = this.recevoirJoueur(socket);
       if(partie.getListeJoueurs().isEmpty()){
         joueur.setJoue(true);
-        partie.addJoueur(joueur);
       }
+      partie.addJoueur(joueur);
 
 
       //Envoie de la main du joueur
@@ -153,16 +153,18 @@ class Thread_Server extends Thread{
         if(joueur.getJoue()){
 
           //Envoie de carte sur table
+          carte_table = partie.getCarteSurTable();
           this.envoyer_carte(carte_table, socket);
 
           //Reception du choix du joueur
           System.out.println("Receptio du choix du joueur");
-          Carte carte_recue = this.recevoir_Carte(socket);
+          Carte carte_recue ;
+          carte_recue = this.recevoir_Carte(socket);
           System.out.println(carte_recue);
           System.out.println("Chioix reçu");
 
-          //Reception de carte si reçu 0
 
+          //Reception de carte si reçu 0
 
           if(carte_recue == null){
             this.envoyer_carte(partie.donner_carte(), socket);
@@ -176,7 +178,6 @@ class Thread_Server extends Thread{
           }
           partie.tour_Suivant(joueur);
           en_cours = this.recevoir_en_cour(socket);
-          partie.tour_Suivant(joueur);
         }
       }while(en_cours);
       System.out.println("Joueur à gagné");

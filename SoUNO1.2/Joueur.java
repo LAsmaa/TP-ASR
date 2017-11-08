@@ -18,51 +18,51 @@ public class Joueur implements Serializable {
     this.gagne= false;
   }
 
-  public void setName(String name){
+  public synchronized void setName(String name){
     this.name=name;
   }
 
-  public String getName(){
+  public synchronized String getName(){
     return this.name;
   }
 
-  public void setCarteSurTable(Carte carte_sur_table){
+  public synchronized void setCarteSurTable(Carte carte_sur_table){
     this.carte_sur_table=carte_sur_table;
   }
 
-  public Carte getCarteSurTable(){
+  public synchronized Carte getCarteSurTable(){
     return this.carte_sur_table;
   }
 
-  public void setJoue(boolean joue){
+  public synchronized void setJoue(boolean joue){
     this.joue=joue;
   }
 
-  public boolean getJoue(){
+  public synchronized boolean getJoue(){
     return this.joue;
   }
 
-  public boolean getGagne(){
+  public synchronized boolean getGagne(){
     return this.gagne;
   }
 
-  public void setGagne(boolean gagne){
+  public synchronized void setGagne(boolean gagne){
     this.gagne=gagne;
   }
 
-  public void add_carte_main_joueur (Carte carte){
+  public synchronized void add_carte_main_joueur (Carte carte){
     this.main_joueur.add(carte);
   }
 
-  public ArrayList<Carte> getMainJoueur(){
+  public synchronized ArrayList<Carte> getMainJoueur(){
     return this.main_joueur;
   }
 
-  public void setMainJoueur (ArrayList<Carte> main_joueur){
+  public synchronized void setMainJoueur (ArrayList<Carte> main_joueur){
     this.main_joueur = main_joueur;
   }
 
-  public void print_main_joueur (){
+  public synchronized void print_main_joueur (){
     System.out.println("Votre main: \n");
     int i = 1;
     for(Carte temp: main_joueur){
@@ -75,11 +75,11 @@ public class Joueur implements Serializable {
   // Dans l'inerface demander au joueur d'inserrer le numero de la position de la carte à déposer
   // Exemple la main est 1- PLUS DEUX ROUGE , 2- 9 VERT , 3- INVERSEMENT BLEU
   // Le joueur insert 3 -> la carte INVERSEMENT BLEU sera déposéé
-  public void depose_Carte(Carte carte_deposee){
+  public synchronized void depose_Carte(Carte carte_deposee){
     boolean temps = main_joueur.remove(carte_deposee);
   }
 
-  public int choix_jeux(){
+  public synchronized int choix_jeux(){
     Scanner sc = new Scanner(System.in);
     int choix=-1;
     while((choix!=1)&&(choix!=0)){
@@ -91,7 +91,7 @@ public class Joueur implements Serializable {
     }return choix;
   }
 
-  public boolean verifie_choix_carte(Carte carte_choisie, Carte carte_table){
+  public synchronized boolean verifie_choix_carte(Carte carte_choisie, Carte carte_table){
     if (( carte_choisie.getPouvoir()==null)&&(carte_table.getPouvoir()==null)){
       if (carte_choisie.getNumero()  ==  carte_table.getNumero()){
         return true;
@@ -126,7 +126,7 @@ public class Joueur implements Serializable {
     return false;
   }
 
-  public Carte choix_carte(){
+  public synchronized Carte choix_carte(){
     Carte carte_choisie;
     //A faire:
     //Verifier si la carte déposéé est bonne...... --"
@@ -153,7 +153,7 @@ public class Joueur implements Serializable {
   }
 
   //Si la carte est joker ou plus quatre le joueur demandeune couleur
-  public Carte carte_suivante(Carte carte){
+  public synchronized Carte carte_suivante(Carte carte){
     Scanner sc = new Scanner(System.in);
     int i;
     do{

@@ -24,7 +24,7 @@ public class Server {
 
     try{
       serverSocket = new ServerSocket(4445);
-      for(int i=0; i<2; i++){
+      for(int i=0; i<3; i++){
         //Pour première connexion
         Socket socket = null;
         socket = serverSocket.accept();
@@ -34,7 +34,7 @@ public class Server {
         System.out.println("New thread lancé");
       }
       System.out.println("Sortie d la création des threads");
-    //partie.getListeJoueurs().get(0).setJoue(true);
+  //partie.getListeJoueurs().get(0).setJoue(true);
     System.out.println("Joueur: " +
       partie.getListeJoueurs().get(0).getName() +
       "Est entrain de jouer: " +

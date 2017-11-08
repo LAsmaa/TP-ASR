@@ -21,11 +21,11 @@ public class Partie{
     this.partie_en_cour = true;
   }
 
-  public ArrayList<Joueur> getListeJoueurs(){
+  public synchronized ArrayList<Joueur> getListeJoueurs(){
       return this.joueurs_de_partie;
   }
 
-  public ArrayList<Carte> donner_main_joueur(){
+  public synchronized ArrayList<Carte> donner_main_joueur(){
     ArrayList<Carte> main_joueur = new ArrayList<Carte>();
     for(int i = 0 ; i < 8 ; i ++){
       main_joueur.add(jeu_de_partie.removeCarte());
@@ -33,30 +33,30 @@ public class Partie{
     return main_joueur;
   }
 
-  public Carte donner_carte(){
+  public synchronized Carte donner_carte(){
     return jeu_de_partie.removeCarte();
   }
 
-  public void addJoueur(Joueur joueur){
+  public synchronized void addJoueur(Joueur joueur){
     this.joueurs_de_partie.add(joueur);
   }
 
-  public Carte getCarteSurTable(){
+  public synchronized Carte getCarteSurTable(){
     return this.carte_sur_table;
   }
 
-  public boolean getEnCour(){
+  public synchronized boolean getEnCour(){
     return this.partie_en_cour;
   }
 
   //Boolean direction
   //Si vrai on avance normale
   //Si faix on change de direction
-  public void setCarteSurTable(Carte carte){
+  public synchronized void setCarteSurTable(Carte carte){
     this.carte_sur_table = carte;
   }
 
-  public ArrayList<Carte> appliquer_pouvoir(Carte carte){
+  public synchronized ArrayList<Carte> appliquer_pouvoir(Carte carte){
     ArrayList<Carte> a_envoyer = new ArrayList<Carte>();
     if(carte.getPouvoirON()){
       if(carte.getPouvoir().equals("PLUS DEUX")){
@@ -83,9 +83,12 @@ public class Partie{
     }return a_envoyer;
   }
 
-  public void tour_Suivant(Joueur joueur_Actuel){
+  public synchronized void tour_Suivant(Joueur joueur_Actuel){
     int pos_Actuel = joueurs_de_partie.indexOf(joueur_Actuel);
-    int pos_Suivant = pos_Actuel % joueurs_de_partie.size();
+    joueurs_de_partie.get(pos_Actuel).setJoue(false);
+    System.out.println("Pos joueur actuel: " + pos_Actuel);
+    int pos_Suivant = ( pos_Actuel+1 ) % joueurs_de_partie.size();
+    System.out.println("Pos joueur suivant: " + pos_Suivant);
     joueurs_de_partie.get(pos_Suivant).setJoue(true);
   }
 
