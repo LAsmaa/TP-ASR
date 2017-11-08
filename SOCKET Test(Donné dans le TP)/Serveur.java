@@ -1,30 +1,14 @@
-import java.net.*;
+
 import java.io.*;
+import java.net.*;
+public class Serveur {
 
-public class Serveur{
-	public static void main (String args[])
-	{
-	int port = 8000;
-	Socket sock_service;
-	ServerSocket sock_ecoute;
-	try {
-		sock_ecoute = new ServerSocket (port);
-		while (true) {
-		//flux entrant 
-		sock_service = sock_ecoute.accept();
-		BufferedReader br =new BufferedReader(new 
-				InputStreamReader( sock_service.getInputStream()));
-		String chaine = br.readLine();
-		System.out.println("Reçu : " + chaine);
-
-		// flux sortant
-		PrintStream ps = new PrintStream (sock_service.getOutputStream());
-		ps.println(chaine+" du serveur N " + args[0]);
-		sock_service.close();
-		}	
-		} 
-		catch (IOException e){
-		System.out.println(e.getMessage());
-		} 
-	}
+  public static void main(String[] args) throws Exception{
+    ServerSocket SS = new ServerSocket(8000);
+    while(true){
+      Socket clientSocket = SS.accept();
+      Thread_Serveurd T_S = new Thread_Serveurd(clientSocket);
+      T_S.start();
+    }
+  }
 }

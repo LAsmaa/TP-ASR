@@ -4,21 +4,14 @@ public class Carte implements Serializable {
   public String pouvoir;
   public String couleur;
   public int numero;
+  public boolean pouvoirOn;
 
-  /*public Carte(String pouvoir, String couleur){
-    this.pouvoir = pouvoir;
-    this.couleur = couleur;
-  }
 
-  public Carte(int numero, String couleur){
-    this.numero = numero;
-    this.couleur = couleur;
-  }*/
-
-  public Carte(int numero, String couleur, String pouvoir){
+  public Carte(int numero, String couleur, String pouvoir, boolean pouvoirOn){
     this.numero = numero;
     this.couleur = couleur;
     this.pouvoir = pouvoir;
+    this.pouvoirOn = pouvoirOn;
   }
 
   public String getPouvoir(){
@@ -43,6 +36,14 @@ public class Carte implements Serializable {
 
   public void setNumero(int numero){
     this.numero = numero;
+  }
+
+  public boolean getPouvoirON(){
+    return this.pouvoirOn;
+  }
+
+  public void setPouvoirOn(boolean pouvoirOn){
+    this.pouvoirOn = pouvoirOn;
   }
 
   public String toString(){

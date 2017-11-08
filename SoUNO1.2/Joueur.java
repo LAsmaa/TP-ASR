@@ -7,7 +7,7 @@ public class Joueur implements Serializable {
   public String name;
   private ArrayList<Carte> main_joueur;
   private Carte carte_sur_table;
-  private boolean joue;
+  public boolean joue;
   private boolean gagne;
 
   public Joueur(String name){
@@ -38,6 +38,10 @@ public class Joueur implements Serializable {
     this.joue=joue;
   }
 
+  public boolean getJoue(){
+    return this.joue;
+  }
+
   public boolean getGagne(){
     return this.gagne;
   }
@@ -46,7 +50,7 @@ public class Joueur implements Serializable {
     this.gagne=gagne;
   }
 
-  public void add_carte_main_Carte (Carte carte){
+  public void add_carte_main_joueur (Carte carte){
     this.main_joueur.add(carte);
   }
 
@@ -71,10 +75,8 @@ public class Joueur implements Serializable {
   // Dans l'inerface demander au joueur d'inserrer le numero de la position de la carte à déposer
   // Exemple la main est 1- PLUS DEUX ROUGE , 2- 9 VERT , 3- INVERSEMENT BLEU
   // Le joueur insert 3 -> la carte INVERSEMENT BLEU sera déposéé
-  public Carte depose_Carte(int position_carte_deposee){
-    Carte carte_deposee = main_joueur.get(position_carte_deposee);
-    main_joueur.remove(position_carte_deposee);
-    return carte_deposee;
+  public void depose_Carte(Carte carte_deposee){
+    boolean temps = main_joueur.remove(carte_deposee);
   }
 
   public int choix_jeux(){
@@ -90,19 +92,38 @@ public class Joueur implements Serializable {
   }
 
   public boolean verifie_choix_carte(Carte carte_choisie, Carte carte_table){
-    if (carte_choisie.getPouvoir().equals("PLUS QUATRE")){
-      return true;
-    }else if (carte_choisie.getPouvoir().equals("JOKER")){
-      return true;
-    }else if (carte_choisie.getPouvoir().equals(carte_table.getPouvoir())){
-      return true;
-    }else if (carte_choisie.getNumero()  ==  carte_table.getNumero()){
-      return true;
-    }else if(carte_choisie.getCouleur().equals(carte_table.getCouleur())){
-      return true;
-    }else {
-      return false;
+    if (( carte_choisie.getPouvoir()==null)&&(carte_table.getPouvoir()==null)){
+      if (carte_choisie.getNumero()  ==  carte_table.getNumero()){
+        return true;
+      }else if(carte_choisie.getCouleur().equals(carte_table.getCouleur())){
+        return true;
+      }
     }
+
+    else if (carte_choisie.getPouvoir()==null){
+      if (carte_table.getPouvoir()!=null){
+        if(carte_choisie.getCouleur().equals(carte_table.getCouleur())){
+          return true;
+        }
+      }
+    }else if (carte_choisie.getPouvoir()!=null){
+      if (carte_choisie.getPouvoir().equals("PLUS QUATRE")){
+        return true;
+      }else if (carte_choisie.getPouvoir().equals("JOKER")){
+        return true;
+      }else if(carte_table.getPouvoir()!=null){
+        if(carte_choisie.getCouleur().equals(carte_table.getCouleur())){
+          return true;
+        }else if (carte_choisie.getPouvoir().equals(carte_table.getPouvoir())){
+          return true;
+        }
+      }else {
+        if(carte_choisie.getCouleur().equals(carte_table.getCouleur())){
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   public Carte choix_carte(){
@@ -121,9 +142,12 @@ public class Joueur implements Serializable {
       }while ((choix < 0 ) || (choix > main_joueur.size()));
       carte_choisie = main_joueur.get(choix-1);
     }while(!verifie_choix_carte(carte_choisie, this.getCarteSurTable()));
-    if ((carte_choisie.getPouvoir().equals("PLUS QUATRE"))
-      ||(carte_choisie.getPouvoir().equals("JOKER"))){
-      return this.carte_suivante(carte_choisie);
+    this.depose_Carte(carte_choisie);
+    if (carte_choisie.getPouvoir() != null){
+      if ((carte_choisie.getPouvoir().equals("PLUS QUATRE"))
+        ||(carte_choisie.getPouvoir().equals("JOKER"))){
+        return this.carte_suivante(carte_choisie);
+      }
     }
     return carte_choisie;
   }

@@ -18,28 +18,29 @@ public class Jeu_De_Cartes {
 
         //Ajout des cartes de couleurs numerotés
         for (int j=0; j< 10; j++){
-          Carte carte_couleur = new Carte(j, couleur, null);
+          Carte carte_couleur = new Carte(j, couleur, null, false);
           add(carte_couleur);
         }
 
         //Ajout des cartes spéciales avec couleur
         for (int k= 0; k< 2; k++){
-          Carte carte_plus_deux = new Carte(-1, couleur, "PLUS 2");
+          Carte carte_plus_deux = new Carte(-1, couleur, "PLUS DEUX", true);
           add(carte_plus_deux);
-          Carte carte_inversement = new Carte(-1, couleur, "INVERSEMENT DE SENS");
+          Carte carte_inversement = new Carte(-1, couleur, "INVERSEMENT DE SENS", true);
           add(carte_inversement);
-          Carte carte_pass = new Carte(-1, couleur, "PASSE TON TOUR");
+          Carte carte_pass = new Carte(-1, couleur, "PASSE TON TOUR", true);
           add(carte_pass);
         }
 
         //Ajout des cartes pouvoir sans couleur
-        Carte carte_joker = new Carte(-2, null, "JOKER");
+        Carte carte_joker = new Carte(-2, null, "JOKER", true);
         add(carte_joker);
-        Carte carte_Plus_Quantre = new Carte(-3, null, "PLUS QUATRE");
+        Carte carte_Plus_Quantre = new Carte(-3, null, "PLUS QUATRE", true);
         add(carte_Plus_Quantre);
       }
     }};
   }
+
   public void addCarte (Carte carte){
     this.Jeu.add(carte);
   }

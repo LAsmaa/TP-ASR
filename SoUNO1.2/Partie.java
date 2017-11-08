@@ -4,7 +4,7 @@ public class Partie{
   private ArrayList<Joueur> joueurs_de_partie;
   private int tour;
   private Carte carte_sur_table;
-  private Jeu_De_Cartes jeu_de_partie;
+  public Jeu_De_Cartes jeu_de_partie;
   private boolean partie_en_cour;
 
 
@@ -12,7 +12,12 @@ public class Partie{
     this.joueurs_de_partie = new ArrayList<Joueur>();
     this.jeu_de_partie = new Jeu_De_Cartes();
     this.tour = 0;
-    this.carte_sur_table = this.jeu_de_partie.removeCarte();
+    Carte carte = this.jeu_de_partie.removeCarte();
+    while (carte.getPouvoir()!=null){
+      this.jeu_de_partie.addCarte(carte);
+      carte = this.jeu_de_partie.removeCarte();
+    }
+    this.carte_sur_table = carte;
     this.partie_en_cour = true;
   }
 
@@ -44,30 +49,46 @@ public class Partie{
     return this.partie_en_cour;
   }
 
+  //Boolean direction
+  //Si vrai on avance normale
+  //Si faix on change de direction
   public void setCarteSurTable(Carte carte){
     this.carte_sur_table = carte;
   }
 
-  public void jouer_partie(){
-    //Boucle pour jouer tant qu'il n'y a pas de gagnant
-    //Fire boucler plusieurs fois sur la liste des joueurs
-    do {
-      //Boucle fait boucler une seule fois sur la liste des joueurs
-      for(Joueur temp: this.getListeJoueurs()){
-          Carte carte_deposee = temp.jouer_joueur(this.getCarteSurTable());
-          if (carte_deposee == null){
-            Carte carte_piochee = jeu_de_partie.removeCarte();
-            temp.add_carte_main_joueur(carte_piochee);
-          }else{
-            jeu_de_partie.addCarte(this.getCarteSurTable());
-            setCarteSurTable(carte_deposee);
-          }
-          if (temp.getGagne()){
-            partie_en_cour= false;
-            break;
-          }
+  public ArrayList<Carte> appliquer_pouvoir(Carte carte){
+    ArrayList<Carte> a_envoyer = new ArrayList<Carte>();
+    if(carte.getPouvoirON()){
+      if(carte.getPouvoir().equals("PLUS DEUX")){
+        carte.setPouvoirOn(false);
+        for(int i=0; i<2 ; i++){
+          a_envoyer.add(this.donner_carte());
+        }
+      }else if(carte.getPouvoir().equals("PLUS QUATRE")){
+        carte.setPouvoirOn(false);
+        for(int i=0; i<4 ; i++){
+          a_envoyer.add(this.donner_carte());
+        }
+      }else if(carte.getPouvoir().equals("JOKER")){
+        carte.setPouvoirOn(false);
+        a_envoyer = null;
+      }else if(carte.getPouvoir().equals("PASSE TON TOUR")){
+        carte.setPouvoirOn(false);
+        a_envoyer = null;
+      }else if(carte.getPouvoir().equals("INVERSEMENT DE SENS")){
+        carte.setPouvoirOn(false);
+        //Ajouter un inversement de direction
+        a_envoyer = null;
       }
-    }while (partie_en_cour);
+    }return a_envoyer;
   }
+
+  public void tour_Suivant(Joueur joueur_Actuel){
+    int pos_Actuel = joueurs_de_partie.indexOf(joueur_Actuel);
+    int pos_Suivant = pos_Actuel % joueurs_de_partie.size();
+    joueurs_de_partie.get(pos_Suivant).setJoue(true);
+  }
+
+
 
 }

@@ -1,4 +1,7 @@
 import java.io.IOException;
+import java.io.*;
+
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -11,29 +14,12 @@ public class Client {
   private ObjectOutputStream outputStream = null;
   private boolean isConnected = false;
   private ObjectInputStream inStream = null;
+  private DataInputStream  inputBoolean= null;
+  private DataOutputStream outputBoolean = null;
+
 
 
   public Client() { }
-
-  /*public void communicate() {
-      while (!isConnected) {
-        try {
-          socket = new Socket("localHost", 4445);
-          System.out.println("Connected");
-          isConnected = true;
-          outputStream = new ObjectOutputStream(socket.getOutputStream());
-          //Crééer l'objet à enoyer !
-
-          //System.out.println("Object to be written = " + joueur_client.getName());
-          outputStream.writeObject(joueur_client);
-        } catch (SocketException se) {
-          se.printStackTrace();
-          // System.exit(0);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-    }
-  }*/
 
   public void envoyer_Joueur(Socket socket, Joueur joueur) {
       while (!isConnected) {
@@ -83,6 +69,35 @@ public class Client {
     }
   }
 
+  public void envoyer_en_cour(boolean en_cour, Socket socket){
+    isConnected = false;
+    while (!isConnected) {
+      try {
+        isConnected = true;
+        outputBoolean = new DataOutputStream(socket.getOutputStream());
+        outputBoolean.writeBoolean(en_cour);
+      } catch (SocketException se) {
+        se.printStackTrace();
+        // System.exit(0);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public boolean recevoir_joue(Socket socket){
+    try {
+      inputBoolean = new DataInputStream(socket.getInputStream());
+      boolean boolean_recue = inputBoolean.readBoolean();
+      return boolean_recue;
+    } catch (SocketException se) {
+        System.exit(0);
+        return false;
+    } catch (IOException e) {
+        e.printStackTrace();
+        return false;
+    }
+  }
 
   public ArrayList<Carte> recevoir_Main_Joueur(Socket socket){
     System.out.println("Reception de vos cartes ....\n");
@@ -94,25 +109,73 @@ public class Client {
   }
 
   public static void main(String[] args) {
+
     Client client = new Client();
     Socket socket = null;
     try{
+
+      //Connexion
       socket = new Socket("localHost", 4445);
+
+      //Envoie du joueur
       Scanner sc = new Scanner(System.in);
       String name;
       System.out.println("veuillez introduir votre nom : ");
       name = sc.nextLine();
       Joueur joueur_client = new Joueur(name);
       client.envoyer_Joueur(socket, joueur_client);
+
+      //Reception de la main du joueur
       joueur_client.setMainJoueur(client.recevoir_Main_Joueur(socket));
-      joueur_client.setCarteSurTable(client.recevoir_Carte(socket));
       joueur_client.print_main_joueur();
+
+      //Reception de la carte sur table
+      joueur_client.setCarteSurTable(client.recevoir_Carte(socket));
       System.out.println(" \n** Sur la table: " + joueur_client.getCarteSurTable());
 
 
-      Carte choisie = joueur_client.choix_carte();
-      System.out.println("Carte choisir: " + choisie );
-      client.envoyer_carte(choisie, socket);
+      Carte choisie = null;
+      boolean en_cours = true;
+
+      //Routine pour chaque tour
+      do{
+
+        //Reception de joue
+        boolean joue = client.recevoir_joue(socket);
+        if(joue){
+            System.out.println("Joueur jouer = " + joue);
+        }
+
+        //System.out.println("Joue reçu");
+        if(joue){
+
+          //Reception de la carte sur table
+          joueur_client.setCarteSurTable(client.recevoir_Carte(socket));
+
+          //CHoix du joueur
+          System.out.println(" \n** Sur la table: " + joueur_client.getCarteSurTable());
+          joueur_client.print_main_joueur();
+          choisie = joueur_client.choix_carte();
+
+          //envoie du choix du joueur
+          System.out.println("Envoie du choix du joueur");
+          client.envoyer_carte(choisie, socket);
+          System.out.println("Choix envoyé");
+
+          //reception de carte si il envoie 0
+          if(choisie == null){
+            joueur_client.add_carte_main_joueur(client.recevoir_Carte(socket));
+          }
+          if(joueur_client.getMainJoueur().isEmpty()){
+            en_cours = false;
+            client.envoyer_en_cour(false, socket);
+          }else {
+            client.envoyer_en_cour(true, socket);
+          }
+        }
+      }while(en_cours == true);
+
+
 
       socket.close();
 
