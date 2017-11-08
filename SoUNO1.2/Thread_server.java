@@ -61,7 +61,7 @@ class Thread_Server extends Thread{
         outputStream = null;
         isConnected = true;
         outputStream = new ObjectOutputStream(socket.getOutputStream());
-        System.out.println("Envoie de la carte: " + carte );
+        //System.out.println("Envoie de la carte: " + carte );
         outputStream.writeObject(carte);
       } catch (SocketException se) {
         se.printStackTrace();
@@ -74,7 +74,7 @@ class Thread_Server extends Thread{
 
   public void envoyer_main_joueur (Socket socket, Partie partie){
     for(int i = 0 ; i < 8 ; i ++){
-      System.out.println("Envoie de carte n°" + i);
+      //System.out.println("Envoie de carte n°" + i);
       this.envoyer_carte(partie.donner_carte(), socket);
     }
   }
@@ -104,6 +104,7 @@ class Thread_Server extends Thread{
       try {
         isConnected = true;
         outputBoolean = new DataOutputStream(socket.getOutputStream());
+        System.out.println("Envoie de joue");
         outputBoolean.writeBoolean(joue);
       } catch (SocketException se) {
         se.printStackTrace();
@@ -126,6 +127,7 @@ class Thread_Server extends Thread{
       joueur = this.recevoirJoueur(socket);
       if(partie.getListeJoueurs().isEmpty()){
         joueur.setJoue(true);
+        System.out.println("Joueur premier lancé");
       }
       partie.addJoueur(joueur);
 
@@ -137,31 +139,31 @@ class Thread_Server extends Thread{
 
 
       //Envoie de la carte sur table
-      Carte carte_table = partie.getCarteSurTable();
-      this.envoyer_carte(carte_table, socket);
+      //Carte carte_table = partie.getCarteSurTable();
+      //this.envoyer_carte(carte_table, socket);
 
       //routine pour chaque tour
       do{
         /*if (partie.getCarteSurTable() != carte_table){
-          this.envoyer_carte_table(socket, partie);
+          this.envoyer_carte(carte_table, socket);
           carte_table = partie.getCarteSurTable();
         }*/
 
 
-        this.envoyer_joue(joueur.getJoue(), socket);
-
         if(joueur.getJoue()){
+          this.envoyer_joue(joueur.getJoue(), socket);
 
           //Envoie de carte sur table
-          carte_table = partie.getCarteSurTable();
+          Carte carte_table = partie.getCarteSurTable();
+          System.out.println("Envoie carte sur table:"+carte_table);
           this.envoyer_carte(carte_table, socket);
 
           //Reception du choix du joueur
           System.out.println("Receptio du choix du joueur");
           Carte carte_recue ;
           carte_recue = this.recevoir_Carte(socket);
-          System.out.println(carte_recue);
           System.out.println("Chioix reçu");
+          System.out.println(carte_recue);
 
 
           //Reception de carte si reçu 0
@@ -176,8 +178,8 @@ class Thread_Server extends Thread{
               //appliquer_pouvoir
             //}
           }
-          partie.tour_Suivant(joueur);
           en_cours = this.recevoir_en_cour(socket);
+          partie.tour_Suivant(joueur);
         }
       }while(en_cours);
       System.out.println("Joueur à gagné");

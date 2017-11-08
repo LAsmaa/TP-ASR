@@ -87,7 +87,7 @@ public class Partie{
     int pos_Actuel = joueurs_de_partie.indexOf(joueur_Actuel);
     joueurs_de_partie.get(pos_Actuel).setJoue(false);
     System.out.println("Pos joueur actuel: " + pos_Actuel);
-    int pos_Suivant = ( pos_Actuel+1 ) % joueurs_de_partie.size();
+    int pos_Suivant = (pos_Actuel+1 ) % joueurs_de_partie.size();
     System.out.println("Pos joueur suivant: " + pos_Suivant);
     joueurs_de_partie.get(pos_Suivant).setJoue(true);
   }

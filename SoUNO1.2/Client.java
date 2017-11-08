@@ -89,6 +89,7 @@ public class Client {
     try {
       inputBoolean = new DataInputStream(socket.getInputStream());
       boolean boolean_recue = inputBoolean.readBoolean();
+      System.out.println("Reception de joue");
       return boolean_recue;
     } catch (SocketException se) {
         System.exit(0);
@@ -112,6 +113,7 @@ public class Client {
 
     Client client = new Client();
     Socket socket = null;
+    Carte carte_sur_table = null;
     try{
 
       //Connexion
@@ -130,27 +132,39 @@ public class Client {
       joueur_client.print_main_joueur();
 
       //Reception de la carte sur table
-      joueur_client.setCarteSurTable(client.recevoir_Carte(socket));
-      System.out.println(" \n** Sur la table: " + joueur_client.getCarteSurTable());
+      //carte_sur_table = client.recevoir_Carte(socket);
+      //joueur_client.setCarteSurTable(carte_sur_table);
+      //System.out.println(" \n** Sur la table: " + joueur_client.getCarteSurTable());
 
 
       Carte choisie = null;
       boolean en_cours = true;
-
+      boolean joue;
       //Routine pour chaque tour
       do{
 
         //Reception de joue
-        boolean joue = client.recevoir_joue(socket);
-        if(joue){
-            System.out.println("Joueur jouer = " + joue);
-        }
+        joue = client.recevoir_joue(socket);
 
-        //System.out.println("Joue reçu");
+        System.out.println("Joue reçu"+joue);
+        joueur_client.setJoue(joue);
         if(joue){
+
+          System.out.println("Joueur jouer = " + joueur_client.getJoue());
 
           //Reception de la carte sur table
-          joueur_client.setCarteSurTable(client.recevoir_Carte(socket));
+          carte_sur_table = client.recevoir_Carte(socket);
+          if(carte_sur_table == null){
+            carte_sur_table = client.recevoir_Carte(socket);
+          }
+          joueur_client.setCarteSurTable(carte_sur_table);
+
+          //reception joue
+          /*joue = client.recevoir_joue(socket);
+          if(joue){
+              System.out.println("Joueur jouer = " + joue);
+          }*/
+
 
           //CHoix du joueur
           System.out.println(" \n** Sur la table: " + joueur_client.getCarteSurTable());
@@ -173,7 +187,7 @@ public class Client {
             client.envoyer_en_cour(true, socket);
           }
         }
-      }while(en_cours == true);
+      }while(en_cours);
 
 
 
