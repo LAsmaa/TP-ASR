@@ -159,13 +159,6 @@ public class Client {
           }
           joueur_client.setCarteSurTable(carte_sur_table);
 
-          //reception joue
-          /*joue = client.recevoir_joue(socket);
-          if(joue){
-              System.out.println("Joueur jouer = " + joue);
-          }*/
-
-
           //CHoix du joueur
           System.out.println(" \n** Sur la table: " + joueur_client.getCarteSurTable());
           joueur_client.print_main_joueur();

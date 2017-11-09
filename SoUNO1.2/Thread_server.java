@@ -136,19 +136,8 @@ class Thread_Server extends Thread{
       ArrayList<Carte> main_a_envoyer = partie.donner_main_joueur();
       this.envoyer_main_joueur(socket, partie);
 
-
-
-      //Envoie de la carte sur table
-      //Carte carte_table = partie.getCarteSurTable();
-      //this.envoyer_carte(carte_table, socket);
-
       //routine pour chaque tour
       do{
-        /*if (partie.getCarteSurTable() != carte_table){
-          this.envoyer_carte(carte_table, socket);
-          carte_table = partie.getCarteSurTable();
-        }*/
-
 
         if(joueur.getJoue()){
           this.envoyer_joue(joueur.getJoue(), socket);
@@ -173,10 +162,13 @@ class Thread_Server extends Thread{
           }else{
             partie.setCarteSurTable(carte_recue);
             System.out.println("Table MISE A JOUE");
-            // ArrayList<Carte> Cartes_Recu_Pouvoir = partie.appliquer_pouvoir(carte_recue);
-            //if(Cartes_Recu_Pouvoir != null){
+            ArrayList<Carte> Cartes_Recu_Pouvoir = partie.appliquer_pouvoir(carte_recue);
+            if(Cartes_Recu_Pouvoir != null){
+              for(Carte temp: Cartes_Recu_Pouvoir){
+                System.out.println(temp);
+              }
               //appliquer_pouvoir
-            //}
+            }
           }
           en_cours = this.recevoir_en_cour(socket);
           partie.tour_Suivant(joueur);
