@@ -18,7 +18,7 @@ public class Server {
 
     try{
       serverSocket = new ServerSocket(4445);
-      for(int i=0; i<3; i++){
+      for(int i=0; i<4; i++){
         //Pour première connexion
         Socket socket = null;
         socket = serverSocket.accept();

@@ -1,23 +1,31 @@
 package sample;
 
+import Game_Package.Partie;
+import Game_Package.Thread_Server;
 import javafx.application.Application;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import javafx.scene.text.Text;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
-
-
-import java.awt.*;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+// import javafx.concurrent.Worker;
 
 
 public class Main extends Application{
@@ -94,8 +102,10 @@ public class Main extends Application{
         Scene Attends = new Scene(gridePane_2);
 
         //button actions
-        button1.setOnAction(e -> windows.setScene(Attends) );
+        button1.setOnAction(e -> windows.setScene(Attends)  );
         button2.setOnAction(e -> windows.setScene(Acceuil) );
+
+
 
 
 
@@ -103,6 +113,14 @@ public class Main extends Application{
 
         windows.show();
     }
+
+
+    public Main(){}
+
+
+
+
+
 
 
     public static void main(String[] args) {
