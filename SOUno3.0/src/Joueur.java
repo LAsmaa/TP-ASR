@@ -161,9 +161,9 @@ public class Joueur implements Serializable {
             i= sc.nextInt()-1;
         }while((i < 1)||(i > 4));
 
-        if (i==0) carte.setCouleur("BLEU");
-        else if (i==1) carte.setCouleur("ROUGE");
-        else if (i==2) carte.setCouleur("JAUNE");
+        if (i==1) carte.setCouleur("BLEU");
+        else if (i==2) carte.setCouleur("ROUGE");
+        else if (i==3) carte.setCouleur("JAUNE");
         else carte.setCouleur("VERT");
 
         return carte;

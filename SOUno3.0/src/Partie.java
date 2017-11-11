@@ -86,7 +86,17 @@ public class Partie{
             int pos_Actuel = joueurs_de_partie.indexOf(joueur);
             System.out.println("Pos joueur actuel: " + pos_Actuel);
             joueurs_de_partie.get(pos_Actuel).setJoue(false);
-            int pos_Suivant = (pos_Actuel+ (2 * direction )) % joueurs_de_partie.size();
+            int pos_Suivant;
+            if((pos_Actuel==0)&&(direction==-1)){
+                pos_Suivant=joueurs_de_partie.size()-2;
+            }else if((pos_Actuel==1)&&(direction==-1)){
+                pos_Suivant=joueurs_de_partie.size()-1;
+            }else{
+                pos_Suivant= (pos_Actuel+ (2 * direction )) % joueurs_de_partie.size();
+            }
+
+
+
             System.out.println("Pos joueur suivant: " + pos_Suivant);
             joueurs_de_partie.get(pos_Suivant).setJoue(true);
         }
@@ -107,10 +117,17 @@ public class Partie{
 
     public synchronized void tour_Suivant(Joueur joueur_Actuel, int direction){
         int pos_Actuel = joueurs_de_partie.indexOf(joueur_Actuel);
+
+        int pos_Suivant;
+        if((direction == -1)&&(pos_Actuel==0)){
+            pos_Suivant = joueurs_de_partie.size()-1;
+        }else {
+            pos_Suivant = (Math.abs(direction + pos_Actuel) % joueurs_de_partie.size());
+        }
         joueur_Actuel.setJoue(false);
         joueurs_de_partie.get(pos_Actuel).setJoue(false);
         System.out.println("Pos joueur actuel: " + pos_Actuel);
-        int pos_Suivant = (pos_Actuel+ direction ) % joueurs_de_partie.size();
+
         System.out.println("Pos joueur suivant: " + pos_Suivant);
         joueurs_de_partie.get(pos_Suivant).setJoue(true);
     }
@@ -122,5 +139,9 @@ public class Partie{
 
     public void setDirecton(int directon) {
         this.directon = directon;
+    }
+
+    public void addCarte(Carte carte){
+        jeu_de_partie.addCarte(carte);
     }
 }

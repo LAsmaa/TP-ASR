@@ -1,9 +1,10 @@
+
+
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.*;
-import java.io.DataInputStream;
 
 
 public class Server {
@@ -17,8 +18,12 @@ public class Server {
         Partie partie = new Partie();
 
         try{
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Donnez le nombre de joueurs de prttie");
+            int Nbp_joueurs= sc.nextInt();
+            System.out.println("Serveur connecté et accepte les joueurs");
             serverSocket = new ServerSocket(4445);
-            for(int i=0; i<4; i++){
+            for(int i=0; i<Nbp_joueurs; i++){
                 //Pour première connexion
                 Socket socket = null;
                 socket = serverSocket.accept();

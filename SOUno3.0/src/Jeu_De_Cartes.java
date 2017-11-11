@@ -33,7 +33,7 @@ public class Jeu_De_Cartes {
                 }
 
                 //Ajout des cartes pouvoir sans couleur
-                Carte carte_joker = new Carte(-2, null, "JOKER", true);
+                Carte carte_joker = new Carte(-2, null, "JOKER", false);
                 add(carte_joker);
                 Carte carte_Plus_Quantre = new Carte(-3, null, "PLUS QUATRE", true);
                 add(carte_Plus_Quantre);
@@ -42,6 +42,12 @@ public class Jeu_De_Cartes {
     }
 
     public void addCarte (Carte carte){
+        if((carte.getPouvoir().equals("PLUS DEUX"))||
+                (carte.getPouvoir().equals("INVERSEMENT DE SENS"))||
+                (carte.getPouvoir().equals("PASSE TON TOUR"))||
+                (carte.getPouvoir().equals("PLUS QUATRE"))){
+            carte.setPouvoirOn(true);
+        }
         this.Jeu.add(carte);
     }
 

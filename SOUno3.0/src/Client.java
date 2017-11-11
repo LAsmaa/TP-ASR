@@ -194,6 +194,7 @@ public class Client {
                         if(joueur_client.getMainJoueur().isEmpty()){
                             en_cours = false;
                             client.envoyer_en_cour(false, socket);
+                            System.out.println("VOUS AVEZ GAGNÉ !! ");
                         }else {
                             client.envoyer_en_cour(true, socket);
                         }
@@ -201,6 +202,8 @@ public class Client {
                 }
 
             }while(en_cours);
+
+
 
 
 

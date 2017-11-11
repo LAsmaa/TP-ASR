@@ -155,6 +155,7 @@ class Thread_Server extends Thread{
                         System.out.println("Receptio du choix du joueur");
                         Carte carte_recue ;
                         carte_recue = this.recevoir_Carte(socket);
+                        //partie.addCarte(carte_recue);
                         System.out.println("Chioix reçu");
                         System.out.println(carte_recue);
 
@@ -163,24 +164,27 @@ class Thread_Server extends Thread{
 
                         if(carte_recue == null){
                             this.envoyer_carte(partie.donner_carte(), socket);
+                            joueur.setJoue(false);
+                            partie.tour_Suivant(joueur, partie.getDirecton());
                         }else{
                             partie.setCarteSurTable(carte_recue);
                             System.out.println("Table MISE A JOUE");
+                            if(carte_recue.getPouvoirON() && !(carte_recue.getPouvoir().equals("PLUS DEUX")) && !(carte_recue.getPouvoir().equals("PLUS QUATRE")) ){
+                                joueur.setJoue(false);
+                                if(carte_recue.getPouvoir().equals("INVERSEMENT DE SENS")){
+                                    int direction = partie.appliquer_pouvoir_INVERS(carte_recue, partie.getDirecton());
+                                    partie.setDirecton(direction);
+                                    joueur.setJoue(false);
+                                    partie.tour_Suivant(joueur, partie.getDirecton());
+                                }else if(carte_recue.getPouvoir().equals("PASSE TON TOUR")){
+                                    partie.appliquer_pouvoir_PASS(carte_recue,joueur, partie.getDirecton());
+                                }
+                            }else{
+                                joueur.setJoue(false);
+                                partie.tour_Suivant(joueur, partie.getDirecton());
+                            }
                         }
                         en_cours = this.recevoir_en_cour(socket);
-                        if(carte_recue.getPouvoirON()){
-                            joueur.setJoue(false);
-                            if(carte_recue.getPouvoir().equals("INVERSEMENT DE SENS")){
-                                partie.setDirecton(partie.appliquer_pouvoir_INVERS(carte_recue,partie.getDirecton()));
-                            }else if(carte_recue.getPouvoir().equals("PASSE TON TOUR")){
-                                partie.appliquer_pouvoir_PASS(carte_recue,joueur, partie.getDirecton());
-                            }
-                        }else{
-                            joueur.setJoue(false);
-                            partie.tour_Suivant(joueur, partie.getDirecton());
-                        }
-
-
                     }
                 }
             }while(en_cours);
