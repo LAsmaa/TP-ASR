@@ -79,11 +79,6 @@ class Thread_Server extends Thread{
     }
   }
 
-  /*public void envoyer_carte_table(Socket socket, Partie partie){
-    System.out.println("Envoie de la carte de la table");
-    this.envoyer_carte(partie.getCarteSurTable(), socket);
-  }*/
-
   public boolean recevoir_en_cour(Socket socket){
     try {
       inputBoolean = new DataInputStream(socket.getInputStream());
@@ -147,31 +142,39 @@ class Thread_Server extends Thread{
           System.out.println("Envoie carte sur table:"+carte_table);
           this.envoyer_carte(carte_table, socket);
 
-          //Reception du choix du joueur
-          System.out.println("Receptio du choix du joueur");
-          Carte carte_recue ;
-          carte_recue = this.recevoir_Carte(socket);
-          System.out.println("Chioix reçu");
-          System.out.println(carte_recue);
-
-
-          //Reception de carte si reçu 0
-
-          if(carte_recue == null){
-            this.envoyer_carte(partie.donner_carte(), socket);
-          }else{
-            partie.setCarteSurTable(carte_recue);
-            System.out.println("Table MISE A JOUE");
-            ArrayList<Carte> Cartes_Recu_Pouvoir = partie.appliquer_pouvoir(carte_recue);
+          //Envoie des cartes bous si carte sur table a un pouvoir ON
+          if(carte_table.getPouvoirON()){
+            ArrayList<Carte> Cartes_Recu_Pouvoir = partie.appliquer_pouvoir(carte_table);
             if(Cartes_Recu_Pouvoir != null){
               for(Carte temp: Cartes_Recu_Pouvoir){
                 System.out.println(temp);
+                this.envoyer_carte(temp, socket);
               }
-              //appliquer_pouvoir
+              joueur.setJoue(false);
+              partie.tour_Suivant(joueur);
             }
+            carte_table.setPouvoirOn(false);
+          }else{
+            //Reception du choix du joueur
+            System.out.println("Receptio du choix du joueur");
+            Carte carte_recue ;
+            carte_recue = this.recevoir_Carte(socket);
+            System.out.println("Chioix reçu");
+            System.out.println(carte_recue);
+
+
+            //Reception de carte si reçu 0
+
+            if(carte_recue == null){
+              this.envoyer_carte(partie.donner_carte(), socket);
+            }else{
+              partie.setCarteSurTable(carte_recue);
+              System.out.println("Table MISE A JOUE");
+            }
+            en_cours = this.recevoir_en_cour(socket);
+            partie.tour_Suivant(joueur);
+
           }
-          en_cours = this.recevoir_en_cour(socket);
-          partie.tour_Suivant(joueur);
         }
       }while(en_cours);
       System.out.println("Joueur à gagné");

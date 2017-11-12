@@ -109,6 +109,21 @@ public class Client {
     return main_joueur;
   }
 
+  public void appliquer_pouvoir(Socket socket, Joueur joueur_client, Carte carte_sur_table){
+    ArrayList<Carte> Cartes_Recu_Pouvoir = new ArrayList<Carte>();
+    if(carte_sur_table.getPouvoir().equals("PLUS DEUX")){
+        joueur_client.add_carte_main_joueur(this.recevoir_Carte(socket));
+        joueur_client.add_carte_main_joueur(this.recevoir_Carte(socket));
+    }else if(carte_sur_table.getPouvoir().equals("PLUS QUATRE")){
+        joueur_client.add_carte_main_joueur(this.recevoir_Carte(socket));
+        joueur_client.add_carte_main_joueur(this.recevoir_Carte(socket));
+        joueur_client.add_carte_main_joueur(this.recevoir_Carte(socket));
+        joueur_client.add_carte_main_joueur(this.recevoir_Carte(socket));
+    }else if(carte_sur_table.getPouvoir().equals("PASSE TON TOUR")){
+      joueur_client.setJoue(false);
+    }
+  }
+
   public static void main(String[] args) {
 
     Client client = new Client();
@@ -159,27 +174,36 @@ public class Client {
           }
           joueur_client.setCarteSurTable(carte_sur_table);
 
-          //CHoix du joueur
-          System.out.println(" \n** Sur la table: " + joueur_client.getCarteSurTable());
-          joueur_client.print_main_joueur();
-          choisie = joueur_client.choix_carte();
+          //Reception des cartes pouvoir
+          if(carte_sur_table.getPouvoirON()){
 
-          //envoie du choix du joueur
-          System.out.println("Envoie du choix du joueur");
-          client.envoyer_carte(choisie, socket);
-          System.out.println("Choix envoyé");
+            client.appliquer_pouvoir(socket, joueur_client, carte_sur_table);
+            //appliquer_pouvoir
 
-          //reception de carte si il envoie 0
-          if(choisie == null){
-            joueur_client.add_carte_main_joueur(client.recevoir_Carte(socket));
-          }
-          if(joueur_client.getMainJoueur().isEmpty()){
-            en_cours = false;
-            client.envoyer_en_cour(false, socket);
           }else {
-            client.envoyer_en_cour(true, socket);
+              //CHoix du joueur
+              System.out.println(" \n** Sur la table: " + joueur_client.getCarteSurTable());
+              joueur_client.print_main_joueur();
+              choisie = joueur_client.choix_carte();
+
+              //envoie du choix du joueur
+              System.out.println("Envoie du choix du joueur");
+              client.envoyer_carte(choisie, socket);
+              System.out.println("Choix envoyé");
+
+              //reception de carte si il envoie 0
+              if(choisie == null){
+                joueur_client.add_carte_main_joueur(client.recevoir_Carte(socket));
+              }
+              if(joueur_client.getMainJoueur().isEmpty()){
+                en_cours = false;
+                client.envoyer_en_cour(false, socket);
+              }else {
+                client.envoyer_en_cour(true, socket);
+              }
+            }
           }
-        }
+
       }while(en_cours);
 
 

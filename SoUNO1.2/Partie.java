@@ -85,6 +85,7 @@ public class Partie{
 
   public synchronized void tour_Suivant(Joueur joueur_Actuel){
     int pos_Actuel = joueurs_de_partie.indexOf(joueur_Actuel);
+    joueur_Actuel.setJoue(false);
     joueurs_de_partie.get(pos_Actuel).setJoue(false);
     System.out.println("Pos joueur actuel: " + pos_Actuel);
     int pos_Suivant = (pos_Actuel+1 ) % joueurs_de_partie.size();
