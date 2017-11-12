@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2b225ce9-09ea-4f54-af9f-0bc51711c4cf" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Cartes/Thumbs.db" afterPath="$PROJECT_DIR$/Cartes/Thumbs.db" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -622,12 +622,12 @@
       <workItem from="1509734978958" duration="1095000" />
       <workItem from="1510337285217" duration="508000" />
       <workItem from="1510337838589" duration="618000" />
-      <workItem from="1510393581881" duration="9431000" />
+      <workItem from="1510393581881" duration="9798000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13728000" />
+    <option name="totallyTimeSpent" value="14095000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1" y="1" width="1364" height="726" extended-state="0" />
