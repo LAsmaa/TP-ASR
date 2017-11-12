@@ -18,12 +18,12 @@ public class Server {
         Partie partie = new Partie();
 
         try{
-            Scanner sc = new Scanner(System.in);
-            System.out.println("Donnez le nombre de joueurs de prttie");
-            int Nbp_joueurs= sc.nextInt();
+            //Scanner sc = new Scanner(System.in);
+            //System.out.println("Donnez le nombre de joueurs de prttie");
+            //int Nbp_joueurs= sc.nextInt();
             System.out.println("Serveur connecté et accepte les joueurs");
             serverSocket = new ServerSocket(4445);
-            for(int i=0; i<Nbp_joueurs; i++){
+            for(int i=0; i<3; i++){
                 //Pour première connexion
                 Socket socket = null;
                 socket = serverSocket.accept();

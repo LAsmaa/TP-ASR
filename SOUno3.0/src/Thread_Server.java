@@ -7,7 +7,6 @@ class Thread_Server extends Thread{
 
     Socket socket;
     Partie partie;
-    Joueur joueur;
     private ObjectInputStream inStream = null;
     private ObjectOutputStream outputStream = null;
     private DataInputStream  inputBoolean= null;
@@ -25,15 +24,14 @@ class Thread_Server extends Thread{
 
             inStream = new ObjectInputStream(socket.getInputStream());
             Joueur joueur_client = (Joueur) inStream.readObject();
-            System.out.println("Joueur reçu : " + joueur_client.getName() );
+            System.out.println("Joueur reçu : " + joueur_client.getName());
             return joueur_client;
         } catch (SocketException se) {
             System.exit(0);
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException cn) {
-            cn.printStackTrace();
-        } return null;
+        }
+        return null;
     }
 
     public Carte recevoir_Carte(Socket socket){
@@ -43,11 +41,10 @@ class Thread_Server extends Thread{
             return carte_recue;
         } catch (SocketException se) {
             System.exit(0);
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException cn) {
-            cn.printStackTrace();
-        }return null;
+        }
+        return null;
     }
 
     public void envoyer_carte(Carte carte, Socket socket){
@@ -115,7 +112,7 @@ class Thread_Server extends Thread{
             System.out.println("Connected");
 
             //Reception du joueur
-            joueur = this.recevoirJoueur(socket);
+            Joueur joueur = this.recevoirJoueur(socket);
             if(partie.getListeJoueurs().isEmpty()){
                 joueur.setJoue(true);
                 System.out.println("Joueur premier lancé");

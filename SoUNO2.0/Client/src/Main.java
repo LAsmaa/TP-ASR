@@ -1,14 +1,6 @@
-package sample;
-
-import Game_Package.Partie;
-import Game_Package.Server;
-import Game_Package.Thread_Server;
+//Interface imports
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import javafx.concurrent.Worker;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,28 +11,20 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-
-// import javafx.concurrent.Worker;
 
 
-public class Main extends Application{
 
-    public Partie partie = new Partie();
-    public Server server = new Server();
-
-    ServerSocket serverSocket = null;
-    Partie partie = new Partie();
-    serverSocket = new ServerSocket(4445);
+public class Main extends Application {
 
     @Override
     public void start(Stage windows) throws Exception{
+
+        Joueur joueur = new Joueur();
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
 
 
@@ -52,11 +36,9 @@ public class Main extends Application{
         ImageView imageViewUNO = new ImageView(UNO);
         imageViewUNO.setX(200);
         Text Texte1 = new Text("Nouvelle partie");
-        Text Texte2 = new Text("Nombre de joueurs: ");
+        Text Texte2 = new Text("Votre nom: ");
         TextField textField1 = new TextField();
         Button button1 = new Button("Lancer");
-
-
 
         //Creationg my gride pane for scene 1
         GridPane gridePane_1 = new GridPane();
@@ -80,17 +62,18 @@ public class Main extends Application{
         Scene Acceuil = new Scene(gridePane_1);
 
 
-        windows.setTitle("SoUno -Nouvelle partie-");
+
+        windows.setTitle("Nouvelle partie -SoUno-");
         windows.setScene(Acceuil);
 
-
-
-        //** SCENE Attends ***//
+        //** SCENE in_game ***//
 
         //Creating elements
-        ImageView imageViewUNO2 = new ImageView(UNO);
-        Text Att_joueur = new Text("En attente de joueurs 0/4 ... ");
-        Button button2 = new Button("Suivant");
+        //ImageView imageViewUNO2 = new ImageView(UNO);
+        Text Att_joueur = new Text("Joueur "+ joueur.getName() + " En mode " + joueur.joue);
+        //Button Carte_table = new Button(joueur.getCarteSurTable().toString());
+        VBox Cartes_main_joueur = new VBox();
+        Button button2 = new Button("Actualiser");
 
 
         //Creationg my gride pane for scene 1
@@ -104,25 +87,33 @@ public class Main extends Application{
         gridePane_2.setAlignment(Pos.CENTER);
 
         //Arranginf elements on the grid
-        gridePane_2.add(imageViewUNO2, 0,0);
+        //gridePane_2.add(imageViewUNO2, 0,0);
         gridePane_2.add(Att_joueur,0,1);
         gridePane_2.add(button2,0,2);
+        gridePane_2.add(Cartes_main_joueur,0,3);
 
-        Scene Attends = new Scene(gridePane_2);
+        Scene in_game = new Scene(gridePane_2);
 
-        //button actions
-        button1.setOnAction(e -> {
-            Server server = new Server();
-            server.start();
-            windows.setScene(Attends);
+
+
+
+
+        //Les actions
+        button1.setOnAction((ActionEvent e) -> {
+            joueur.setName(textField1.getText());
+            Client client = new Client(joueur);
+            //Att_joueur.textProperty().bind(client.Jouer_En_Cours);
+            client.start();
+            windows.setScene(in_game);
+            windows.setTitle("Partie en cours -SoUno-");
+
         });
-        button2.setOnAction(e -> {
-            windows.setScene(Acceuil);
-        }  );
 
-
-
-
+        button2.setOnAction((ActionEvent e) -> {
+            Att_joueur.setText("En mode "+ joueur.joue);
+            
+            windows.setScene(in_game);
+        });
 
 
 
@@ -130,18 +121,7 @@ public class Main extends Application{
     }
 
 
-    public Main(){}
-
-
-
-
-
-
-
     public static void main(String[] args) {
         launch(args);
-
     }
-
-
 }

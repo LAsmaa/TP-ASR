@@ -20,6 +20,13 @@ public class Joueur implements Serializable {
         this.gagne= false;
     }
 
+    public Joueur(){
+        this.main_joueur = new ArrayList<Carte>();
+        this.carte_sur_table = null;
+        this.joue= false;
+        this.gagne= false;
+    }
+
     public synchronized void setName(String name){
         this.name=name;
     }

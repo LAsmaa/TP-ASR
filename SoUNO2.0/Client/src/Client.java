@@ -1,23 +1,19 @@
-import java.io.IOException;
+import javafx.application.Platform;
+
 import java.io.*;
-
-
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.*;
+import java.util.ArrayList;
 
+public class Client extends Thread{
 
-public class Client {
+    private Joueur joueur;
     private ObjectInputStream inputStream = null;
     private ObjectOutputStream outputStream = null;
     private boolean isConnected = false;
     private ObjectInputStream inStream = null;
-    private DataInputStream  inputBoolean= null;
+    private DataInputStream inputBoolean= null;
     private DataOutputStream outputBoolean = null;
-
-
 
     public Client() { }
 
@@ -124,26 +120,30 @@ public class Client {
         }joueur_client.setJoue(false);
     }
 
-    public static void main(String[] args) {
 
-        Client client = new Client();
+    public Client(Joueur joueur) {
+        this.joueur = joueur;
+    }
+
+
+
+    public void lancer_client(){
         Socket socket = null;
         Carte carte_sur_table = null;
+
         try{
 
             //Connexion
             socket = new Socket("localHost", 4445);
 
             //Envoie du joueur
-            Scanner sc = new Scanner(System.in);
-            String name;
-            System.out.println("veuillez introduir votre nom : ");
-            name = sc.nextLine();
-            Joueur joueur_client = new Joueur(name);
-            client.envoyer_Joueur(socket, joueur_client);
+            Joueur joueur_client = this.getJoueur();
+            System.out.println("Envoie du joueur "+joueur_client.getName());
+
+            this.envoyer_Joueur(socket, joueur_client);
 
             //Reception de la main du joueur
-            joueur_client.setMainJoueur(client.recevoir_Main_Joueur(socket));
+            joueur_client.setMainJoueur(this.recevoir_Main_Joueur(socket));
             joueur_client.print_main_joueur();
 
 
@@ -155,25 +155,24 @@ public class Client {
             do{
 
                 //Reception de joue
-                joue = client.recevoir_joue(socket);
+                joue = this.recevoir_joue(socket);
 
                 System.out.println("Joue reçu"+joue);
                 joueur_client.setJoue(joue);
                 if(joue){
-
                     System.out.println("Joueur jouer = " + joueur_client.getJoue());
 
                     //Reception de la carte sur table
-                    carte_sur_table = client.recevoir_Carte(socket);
+                    carte_sur_table = this.recevoir_Carte(socket);
                     if(carte_sur_table == null){
-                        carte_sur_table = client.recevoir_Carte(socket);
+                        carte_sur_table = this.recevoir_Carte(socket);
                     }
                     joueur_client.setCarteSurTable(carte_sur_table);
 
                     //Reception des cartes pouvoir
                     if(carte_sur_table.getPouvoirON()){
-
-                        client.appliquer_pouvoir(socket, joueur_client, carte_sur_table);
+                        joueur.setJoue(false);
+                        this.appliquer_pouvoir(socket, joueur_client, carte_sur_table);
                         //appliquer_pouvoir_PLUS
 
                     }else {
@@ -184,30 +183,41 @@ public class Client {
 
                         //envoie du choix du joueur
                         System.out.println("Envoie du choix du joueur");
-                        client.envoyer_carte(choisie, socket);
+                        this.envoyer_carte(choisie, socket);
                         System.out.println("Choix envoyé");
 
                         //reception de carte si il envoie 0
                         if(choisie == null){
-                            joueur_client.add_carte_main_joueur(client.recevoir_Carte(socket));
+                            joueur.setJoue(false);
+                            joueur_client.add_carte_main_joueur(this.recevoir_Carte(socket));
                         }
                         if(joueur_client.getMainJoueur().isEmpty()){
                             en_cours = false;
-                            client.envoyer_en_cour(false, socket);
+                            this.envoyer_en_cour(false, socket);
                             System.out.println("VOUS AVEZ GAGNÉ !! ");
                         }else {
-                            client.envoyer_en_cour(true, socket);
+                            this.envoyer_en_cour(true, socket);
                         }
                     }
+                    joueur.setJoue(false);
                 }
-
             }while(en_cours);
-
             socket.close();
-
         }catch (IOException e){
             System.out.println(e.getMessage());
         }
+    }
 
+    @Override
+    public void run(){
+        lancer_client();
+    }
+
+    public Joueur getJoueur() {
+        return joueur;
+    }
+
+    public void setJoueur(Joueur joueur) {
+        this.joueur = joueur;
     }
 }
